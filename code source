@@ -1,8 +1,8 @@
 # Bienvenue dans le projet de base de données de Gaspard Lintanff
-# Toute les fonctions sont modifiable et améliorable, si une nouvelle fonction est créer bien penser à l'ajouter
+# Toutes les fonctions sont modifiables et améliorables, si une nouvelle fonction est créée bien penser à l'ajouter
 # au menu situé sous la fonction main()
 # Pour plus d'information sur le projet se rendre sur la page : http://yalamaths.free.fr/documents/NSI/TP-Projets/1ereNSI_TP_Mini-BDD.pdf
-# Pour une meilleure compréhension de la librairie json aller sur : https://youtu.be/kJtVObyrisM?si=8fvaAKFheF8h3B-C
+# Pour une meilleure compréhension de l'utilisation de la librairie .json : https://youtu.be/kJtVObyrisM?si=8fvaAKFheF8h3B-C
 # Rendez vous sur mon github pour plus de questions : https://github.com/gorugard/BDD/tree/main
 
 import json
@@ -19,7 +19,7 @@ def creer_criteres() -> list:
     return critères
 
 def Construire_fiche(criteres: list) -> dict:
-    # Fonction pour construire une fiche (sous forme de dictionnaire) à partir de la liste de critères
+    # Fonction pour construire une fiche (sous forme de dictionnaire) à partir de la liste de critères.
     fiche = {}
     for critere in criteres:
         fiche[critere] = input(f"Entrez votre choix pour le critère '{critere}' : ")
@@ -36,7 +36,7 @@ def Créer_BDD(criteres: list) -> list:
     return bdd
 
 def Affichage_BDD(bdd: list) -> None:
-# Permet l'affichage de la fiche avec des retours à la ligne et la
+# Permet l'affichage de la fiche avec des retours à la ligne pour plus de propreté.
     if not bdd:
         print("La base de données est vide.")
         return  
@@ -52,7 +52,7 @@ def Affichage_BDD(bdd: list) -> None:
 def Ajouter_fiche(bdd: list, criteres: list) -> None:
     # Fonction pour ajouter une fiche à la base de données.
     print("Ajout d'une nouvelle fiche.")
-    fiche = Construire_fiche(criteres) # rapel la fonction permettant de créer une fiche (racourci rapide)
+    fiche = Construire_fiche(criteres) # rapel la fonction permettant de créer une fiche (racourci rapide).
     bdd.append(fiche)
     
     print("Fiche ajoutée.")
@@ -68,9 +68,9 @@ def Supprimer_fiche(bdd: list) -> None:
         print("Numéro invalide.")
 
 def Trier_BDD(bdd: list, critere: str) -> None:
-    #permet de trier la base de données selon un critère
-    if not bdd:
-        print("La base de données est vide.") # verifie que bdd n'est pas vide avant de commencer
+    # Permet de trier la base de données selon un critère.
+    if not bdd: # Verifie que bdd n'est pas vide avant de commencer.
+        print("La base de données est vide.")
         return   
     if critere not in bdd[0]:
         print("Critère invalide.")
@@ -83,12 +83,12 @@ def Trier_BDD(bdd: list, critere: str) -> None:
 
 
 def Rechercher_BDD(bdd: list, valeur: str) -> None:
-    # permet de chercher une valeur parmi les fiches
+    # Permet de chercher une valeur parmi les fiches.
     if not bdd:
-        print("Votre base de données est vide.") # verifie que bdd n'est pas vide avant de commencer
+        print("Votre base de données est vide.") # Verifie que bdd n'est pas vide avant de commencer.
         return  
-    trouvé = False # initie la valeur à False 
-    compteur = 1 # initie le compteur 
+    trouvé = False # Initie la valeur à False.
+    compteur = 1 # Initie le compteur. 
     for fiche in bdd:
         for critere, val in fiche.items():
             if val == valeur: 
@@ -99,37 +99,37 @@ def Rechercher_BDD(bdd: list, valeur: str) -> None:
         print("La valeur/(choix) n'a pas été trouvé dans votre base de données.")
 
 def Sauvegarder_bdd(bdd, nom_fichier):
-    # sauvergarde la base de données dans un fichier en .json
-    with open(nom_fichier, 'w', encoding='utf-8') as fichier:
+    # Sauvergarde la base de données dans un fichier en .json.
+    with open(nom_fichier, 'w', encoding='utf-8') as fichier: # w correspond à write et utf-8 le système d'encodage
         json.dump(bdd, fichier)
     print(f"Base de données sauvegardée dans {nom_fichier}.")
 
-def charger_bdd(nom_fichier: str) -> tuple:
-        # récupère le fichier .json précédemment pour réafficher la base de données sauvegardée
-        with open(nom_fichier, 'r', encoding='utf-8') as fichier:
+def Charger_bdd(nom_fichier: str) -> tuple:
+        # récupère le fichier .json précédemment pour afficher la base de données sauvegardée
+        with open(nom_fichier, 'r', encoding='utf-8') as fichier: # r correspond à read
             bdd = json.load(fichier)
         criteres = list(bdd[0].keys()) if bdd else []
         print(f"Base de données chargée depuis {nom_fichier}.")
         return criteres, bdd
 
-def initialisation() -> tuple:
-    # permet de laisser le choix à l'utilisateur entre créer une nouvelle ou une première base de données ou en charger une ancienne
+def Initialisation() -> tuple:
+    # Permet de laisser le choix à l'utilisateur entre créer une nouvelle ou une première base de données ou en charger une ancienne
     print("Créer une nouvelle base de données : taper 1")
     print("Charger une base de donnée existante : taper 2")
     choix = input("Votre choix : ")
-    if choix == "1":
+    if choix == "1": # Permet de créer une première ou une nouvelle base de données.
         criteres = creer_criteres()
         bdd = Créer_BDD(criteres)
-    elif choix == "2":
+    elif choix == "2": # Utilise directement la fonction charger sans attendre.
         nom_fichier = input("Nom du fichier à charger : ")
-        criteres, bdd = charger_bdd(nom_fichier)
+        criteres, bdd = Charger_bdd(nom_fichier)
     return criteres, bdd
 
 
 def main() -> None:
-    # Programme principal qui rassemble un menu simplifié, permettant d'appeller la fonction choisie
+    # Programme principal qui rassemble un menu simplifié, permettant d'appeller une fonction choisie.
     print("Bienvenue dans votre mini-base de données personelle.")
-    criteres, bdd = initialisation()
+    criteres, bdd = Initialisation()
 
     while True:
         print("\nMenu :")
@@ -156,7 +156,7 @@ def main() -> None:
             Rechercher_BDD(bdd, valeur)
         elif choix == "6":
             nom_fichier = input("Nom du fichier sauvegardé : ")
-            sauvegarder_bdd(bdd, nom_fichier)
+            Sauvegarder_bdd(bdd, nom_fichier)
         elif choix == "0":
             break
         else:
@@ -165,4 +165,7 @@ def main() -> None:
 if __name__ == "__main__":
     main()
 
+# Remerciement à seykamoonlight sur Discord
+# Remerciement à karim sadiki sur Youtube 
+# Remerciement au site https://docs.python.org/fr/3/library/json.html
 
