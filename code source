@@ -1,0 +1,168 @@
+# Bienvenue dans le projet de base de données de Gaspard Lintanff
+# Toute les fonctions sont modifiable et améliorable, si une nouvelle fonction est créer bien penser à l'ajouter
+# au menu situé sous la fonction main()
+# Pour plus d'information sur le projet se rendre sur la page : http://yalamaths.free.fr/documents/NSI/TP-Projets/1ereNSI_TP_Mini-BDD.pdf
+# Pour une meilleure compréhension de la librairie json aller sur : https://youtu.be/kJtVObyrisM?si=8fvaAKFheF8h3B-C
+# Rendez vous sur mon github pour plus de questions : 
+
+import json
+def creer_criteres() -> list:
+    # Fonction pour créer une liste de critères uniques.
+    critères = []
+    nombre_de_criteres = int(input("Combien de critères souhaitez-vous ? : "))
+    for k in range(nombre_de_criteres):
+        critere = input(f"Entrer le critère {k + 1} : ")
+        while critere in critères:
+            print("Ce critère existe déjà, entrez un autre !")
+            critere = input(f"Entrer le critère {k + 1} : ")
+        critères.append(critere)
+    return critères
+
+def Construire_fiche(criteres: list) -> dict:
+    # Fonction pour construire une fiche (sous forme de dictionnaire) à partir de la liste de critères
+    fiche = {}
+    for critere in criteres:
+        fiche[critere] = input(f"Entrez votre choix pour le critère '{critere}' : ")
+    return fiche
+
+def Créer_BDD(criteres: list) -> list:
+    # Fonction pour créer une base de données (liste de fiches).
+    bdd = []
+    nombre_de_fiches = int(input("Combien de fiches souhaitez-vous créer ? : "))
+    for k in range(nombre_de_fiches):
+        print(f"Création de la fiche {k + 1} :")
+        fiche = Construire_fiche(criteres)
+        bdd.append(fiche)
+    return bdd
+
+def Affichage_BDD(bdd: list) -> None:
+# Permet l'affichage de la fiche avec des retours à la ligne et la
+    if not bdd:
+        print("La base de données est vide.")
+        return  
+    compteur = 1
+    for fiche in bdd:
+        print(f"Fiche {compteur} :")
+        for critere, valeur in fiche.items():
+            print(f"  {critere} : {valeur}")
+        print()  
+        compteur = compteur + 1  
+
+
+def Ajouter_fiche(bdd: list, criteres: list) -> None:
+    # Fonction pour ajouter une fiche à la base de données.
+    print("Ajout d'une nouvelle fiche.")
+    fiche = Construire_fiche(criteres) # rapel la fonction permettant de créer une fiche (racourci rapide)
+    bdd.append(fiche)
+    
+    print("Fiche ajoutée.")
+
+def Supprimer_fiche(bdd: list) -> None:
+    # Fonction pour supprimer une fiche de la base de données.
+    Affichage_BDD(bdd)
+    numéro_fiche = int(input("Entrez le numéro de la fiche à supprimer : "))
+    if 1 <= numéro_fiche <= len(bdd): # fiche se trouvant entre 1 compris et le nombre de fiche dans bdd 
+        bdd.pop(numéro_fiche - 1) # avec numéro_fiche - 1 l'utilisateur n'a donc pas besoin de donner le chiffre en partant de l'index 0
+        print("Fiche supprimée.")
+    else:
+        print("Numéro invalide.")
+
+def Trier_BDD(bdd: list, critere: str) -> None:
+    #permet de trier la base de données selon un critère
+    if not bdd:
+        print("La base de données est vide.") # verifie que bdd n'est pas vide avant de commencer
+        return   
+    if critere not in bdd[0]:
+        print("Critère invalide.")
+        return
+    for i in range(len(bdd)):
+        for j in range(i + 1, len(bdd)):
+            if bdd[i][critere] > bdd[j][critere]:
+                bdd[i], bdd[j] = bdd[j], bdd[i]    
+    print(f"Votre base de donnée a été triée selon le critère '{critere}'.")
+
+
+def Rechercher_BDD(bdd: list, valeur: str) -> None:
+    # permet de chercher une valeur parmi les fiches
+    if not bdd:
+        print("Votre base de données est vide.") # verifie que bdd n'est pas vide avant de commencer
+        return  
+    trouvé = False # initie la valeur à False 
+    compteur = 1 # initie le compteur 
+    for fiche in bdd:
+        for critere, val in fiche.items():
+            if val == valeur: 
+                print(f"Valeur/(choix) trouvé dans la fiche {compteur}, critère '{critere}'.")
+                trouvé = True
+        compteur = compteur + 1
+    if not trouvé:
+        print("La valeur/(choix) n'a pas été trouvé dans votre base de données.")
+
+def Sauvegarder_bdd(bdd, nom_fichier):
+    # sauvergarde la base de données dans un fichier en .json
+    with open(nom_fichier, 'w', encoding='utf-8') as fichier:
+        json.dump(bdd, fichier)
+    print(f"Base de données sauvegardée dans {nom_fichier}.")
+
+def charger_bdd(nom_fichier: str) -> tuple:
+        # récupère le fichier .json précédemment pour réafficher la base de données sauvegardée
+        with open(nom_fichier, 'r', encoding='utf-8') as fichier:
+            bdd = json.load(fichier)
+        criteres = list(bdd[0].keys()) if bdd else []
+        print(f"Base de données chargée depuis {nom_fichier}.")
+        return criteres, bdd
+
+def initialisation() -> tuple:
+    # permet de laisser le choix à l'utilisateur entre créer une nouvelle ou une première base de données ou en charger une ancienne
+    print("Créer une nouvelle base de données : taper 1")
+    print("Charger une base de donnée existante : taper 2")
+    choix = input("Votre choix : ")
+    if choix == "1":
+        criteres = creer_criteres()
+        bdd = Créer_BDD(criteres)
+    elif choix == "2":
+        nom_fichier = input("Nom du fichier à charger : ")
+        criteres, bdd = charger_bdd(nom_fichier)
+    return criteres, bdd
+
+
+def main() -> None:
+    # Programme principal qui rassemble un menu simplifié, permettant d'appeller la fonction choisie
+    print("Bienvenue dans votre mini-base de données personelle.")
+    criteres, bdd = initialisation()
+
+    while True:
+        print("\nMenu :")
+        print("Afficher la base de données : taper 1")
+        print("Ajouter une fiche : taper 2")
+        print("Supprimer une fiche : taper 3")
+        print("Trier votre base de données selon un critère : taper 4")
+        print("Rechercher une valeur/(choix) : taper 5")
+        print("Sauvegarder votre base de données : taper 6")
+        print("Quitter : taper 0")
+        choix = input("Votre choix : ")
+
+        if choix == "1":
+            Affichage_BDD(bdd)
+        elif choix == "2":
+            Ajouter_fiche(bdd, criteres)
+        elif choix == "3":
+            Supprimer_fiche(bdd)
+        elif choix == "4":
+            critere = input("Entrer le critère pour le tri : ")
+            Trier_BDD(bdd, critere)
+        elif choix == "5":
+            valeur = input("Entrer la valeur/(choix) à rechercher : ")
+            Rechercher_BDD(bdd, valeur)
+        elif choix == "6":
+            nom_fichier = input("Nom du fichier sauvegardé : ")
+            sauvegarder_bdd(bdd, nom_fichier)
+        elif choix == "0":
+            break
+        else:
+            print("Choix invalide.")
+
+if __name__ == "__main__":
+    main()
+
+
