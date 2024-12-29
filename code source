@@ -3,7 +3,7 @@
 # au menu situé sous la fonction main()
 # Pour plus d'information sur le projet se rendre sur la page : http://yalamaths.free.fr/documents/NSI/TP-Projets/1ereNSI_TP_Mini-BDD.pdf
 # Pour une meilleure compréhension de la librairie json aller sur : https://youtu.be/kJtVObyrisM?si=8fvaAKFheF8h3B-C
-# Rendez vous sur mon github pour plus de questions : 
+# Rendez vous sur mon github pour plus de questions : https://github.com/gorugard/BDD/tree/main
 
 import json
 def creer_criteres() -> list:
